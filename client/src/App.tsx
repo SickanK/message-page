@@ -1,24 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
 
 function App() {
+  let [message, setMessage] = useState<string>("Message");
+
+  const handleClick = () => {
+    fetch(process.env.REACT_DOMAIN_APP + "/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": process.env.REACT_APP_DOMAIN as string,
+      },
+      body: JSON.stringify({
+        message: message,
+      }),
+    });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <p>{message}</p>
+      <input
+        type="text"
+        onChange={(e) => setMessage(e.target.value)}
+        value={message}
+      />
+      <button onClick={handleClick}>Send</button>
     </div>
   );
 }
